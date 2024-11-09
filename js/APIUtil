@@ -1,0 +1,39 @@
+const fetch = require('node-fetch'); // Importing fetch for Node.js
+const API_key = "9acbe30eb24f4bb79291bb97f9f06eb3";
+const BASE_URL = "https://newsapi.org/v2/";
+
+async function apiFetch(endpoint, options = {}) {
+    const url = `${BASE_URL}${endpoint}?apiKey=${API_key}`;
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) throw new Error("Network response was not ok");
+        return await response.json();
+    } catch (error) {
+        console.error("API fetch error:", error);
+        throw error;
+    }
+}
+
+// EXAMPLES
+async function getUserData(userId) {
+    return apiFetch(`users/${userId}`);
+}
+
+async function getPosts() {
+    return apiFetch("posts");
+}
+
+async function createPost(data) {
+    return apiFetch("posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+}
+
+// Export functions for Node.js
+module.exports = {
+    getUserData,
+    getPosts,
+    createPost
+};
